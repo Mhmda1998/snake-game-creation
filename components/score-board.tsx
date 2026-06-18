@@ -1,4 +1,4 @@
-import { Trophy, Gauge, Apple } from "lucide-react"
+import { Trophy, Gauge, Apple, Flame } from "lucide-react"
 
 type StatProps = {
   icon: React.ReactNode
@@ -35,29 +35,51 @@ export function ScoreBoard({
   score,
   highScore,
   level,
+  combo,
 }: {
   score: number
   highScore: number
   level: number
+  combo: number
 }) {
   return (
-    <div className="flex w-full flex-col gap-3 sm:flex-row">
-      <Stat
-        icon={<Apple className="size-5" aria-hidden="true" />}
-        label="Score"
-        value={score}
-        accent
-      />
-      <Stat
-        icon={<Trophy className="size-5" aria-hidden="true" />}
-        label="Best"
-        value={highScore}
-      />
-      <Stat
-        icon={<Gauge className="size-5" aria-hidden="true" />}
-        label="Level"
-        value={level}
-      />
+    <div className="flex w-full flex-col gap-3">
+      <div className="flex w-full flex-col gap-3 sm:flex-row">
+        <Stat
+          icon={<Apple className="size-5" aria-hidden="true" />}
+          label="Score"
+          value={score}
+          accent
+        />
+        <Stat
+          icon={<Trophy className="size-5" aria-hidden="true" />}
+          label="Best"
+          value={highScore}
+        />
+        <Stat
+          icon={<Gauge className="size-5" aria-hidden="true" />}
+          label="Level"
+          value={level}
+        />
+      </div>
+
+      {/* Combo meter — appears once a streak is active */}
+      <div
+        className={`flex items-center justify-center gap-2 rounded-lg border px-4 py-2 transition-all duration-200 ${
+          combo > 1
+            ? "border-accent/50 bg-accent/10 text-accent opacity-100"
+            : "border-border/50 bg-card/40 text-muted-foreground opacity-60"
+        }`}
+        aria-live="polite"
+      >
+        <Flame
+          className={`size-4 ${combo > 1 ? "text-accent" : ""}`}
+          aria-hidden="true"
+        />
+        <span className="font-mono text-xs font-semibold uppercase tracking-widest">
+          {combo > 1 ? `Combo ×${combo}` : "Chain fruit for combos"}
+        </span>
+      </div>
     </div>
   )
 }

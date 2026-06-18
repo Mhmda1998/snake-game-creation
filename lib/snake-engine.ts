@@ -9,6 +9,19 @@ export const GRID_ROWS = 24
 // Number of foods eaten before the level increases.
 export const FOODS_PER_LEVEL = 4
 
+// Base points awarded per normal fruit (multiplied by level + combo).
+export const BASE_POINTS = 10
+
+// A bonus (golden) fruit appears after this many normal fruits are eaten,
+// is worth far more, and disappears after BONUS_LIFETIME_MS if not eaten.
+export const BONUS_EVERY = 5
+export const BONUS_POINTS = 50
+export const BONUS_LIFETIME_MS = 6000
+
+// Combo window: eating another fruit within this time keeps the combo alive.
+export const COMBO_WINDOW_MS = 2600
+export const MAX_COMBO = 8
+
 // Base step interval (ms) per difficulty and how aggressively it speeds up.
 export const DIFFICULTY: Record<
   Difficulty,

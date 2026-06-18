@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import { type Difficulty, DIFFICULTY } from "@/lib/snake-engine"
-import { Play, RotateCcw, Skull, Sparkles } from "lucide-react"
+import type { GameStats } from "@/components/snake-game"
+import { Apple, Clock, Flame, Gauge, Play, RotateCcw, Skull, Sparkles } from "lucide-react"
 
 type Props = {
   status: "idle" | "playing" | "paused" | "over"
@@ -10,6 +11,7 @@ type Props = {
   highScore: number
   isNewBest: boolean
   difficulty: Difficulty
+  stats: GameStats
   onChangeDifficulty: (d: Difficulty) => void
   onStart: () => void
   onResume: () => void
@@ -17,12 +19,20 @@ type Props = {
 
 const ORDER: Difficulty[] = ["easy", "normal", "hard"]
 
+function formatDuration(ms: number) {
+  const total = Math.floor(ms / 1000)
+  const m = Math.floor(total / 60)
+  const s = total % 60
+  return `${m}:${s.toString().padStart(2, "0")}`
+}
+
 export function GameOverlay({
   status,
   score,
   highScore,
   isNewBest,
   difficulty,
+  stats,
   onChangeDifficulty,
   onStart,
   onResume,
@@ -90,6 +100,31 @@ export function GameOverlay({
                 New personal best!
               </p>
             )}
+
+            {/* Detailed run stats */}
+            <div className="mt-5 grid grid-cols-3 gap-2">
+              <RunStat
+                icon={<Apple className="size-4" aria-hidden="true" />}
+                label="Fruit"
+                value={stats.apples}
+              />
+              <RunStat
+                icon={<Gauge className="size-4" aria-hidden="true" />}
+                label="Level"
+                value={stats.level}
+              />
+              <RunStat
+                icon={<Clock className="size-4" aria-hidden="true" />}
+                label="Time"
+                value={formatDuration(stats.durationMs)}
+              />
+            </div>
+            {stats.maxCombo > 1 && (
+              <p className="mt-3 flex items-center justify-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-widest text-accent">
+                <Flame className="size-3.5" aria-hidden="true" />
+                Best combo ×{stats.maxCombo}
+              </p>
+            )}
           </>
         )}
 
@@ -145,6 +180,28 @@ export function GameOverlay({
           )}
         </div>
       </div>
+    </div>
+  )
+}
+
+function RunStat({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: string | number
+}) {
+  return (
+    <div className="flex flex-col items-center gap-1 rounded-lg border border-border bg-secondary/40 px-2 py-3">
+      <span className="text-muted-foreground">{icon}</span>
+      <span className="font-mono text-lg font-bold leading-none text-card-foreground tabular-nums">
+        {value}
+      </span>
+      <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+        {label}
+      </span>
     </div>
   )
 }
